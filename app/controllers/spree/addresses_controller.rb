@@ -8,7 +8,7 @@ class Spree::AddressesController < Spree::StoreController
   end
 
   def create
-    @address = spree_current_user.addresses.build(params[:address])
+    @address = spree_current_user.addresses.build(address_params)
     if @address.save
       flash[:notice] = Spree.t(:successfully_created, :resource => Spree::Address.model_name.human)
       redirect_to account_path
@@ -16,7 +16,7 @@ class Spree::AddressesController < Spree::StoreController
       render :action => "new"
     end
   end
-  
+
   def show
     redirect_to account_path
   end
@@ -55,5 +55,10 @@ class Spree::AddressesController < Spree::StoreController
 
     flash[:notice] = I18n.t(:successfully_removed, :resource => Spree::Address.model_name.human)
     redirect_to(request.env['HTTP_REFERER'] || account_path) unless request.xhr?
+  end
+
+  private
+  def address_params
+    params.require(:address).permit!
   end
 end
